@@ -4,14 +4,17 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.border.EmptyBorder;
 
 import controller.EstudianteController;
 import controller.MateriaController;
 import controller.ProfesorController;
+import controller.ValoracionController;
 import model.Estudiante;
 import model.Materia;
 import model.Profesor;
+import model.Valoracionmateria;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
@@ -32,8 +35,9 @@ public class Ventana_Centroeducativo extends JFrame {
 	private JPanel contentPane;
 	private JComboBox<Materia> jcbMateria;
 	private JComboBox<Profesor> jcbProfesor;
-	private List<Panel_complementario> panelesAlumnos = new ArrayList<Panel_complementario>();
-
+	private List<Panel_complementario> panelesAlumnos;
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -128,7 +132,7 @@ public class Ventana_Centroeducativo extends JFrame {
 		JButton btnNewButton_1 = new JButton("Guardar");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				guardar();
+				guardarNotas();
 			}
 		});
 		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -166,16 +170,17 @@ public class Ventana_Centroeducativo extends JFrame {
 	 */
 	private void cargarEstudiantes() {
 		this.panelEstudiantes.removeAll();
-		this.panelesAlumnos.clear();
-		
-		
-		for (Estudiante e : EstudianteController.cargarEstudiante()) {
-			Panel_complementario nuevoPanel = new Panel_complementario((Profesor) jcbProfesor.getSelectedItem(), (Materia) jcbMateria.getSelectedItem(), e);
-			this.panelEstudiantes.add(nuevoPanel);
-			this.panelesAlumnos.add(nuevoPanel);
+		panelesAlumnos = new ArrayList<Panel_complementario>();
+
+		List<Estudiante> l = EstudianteController.cargarEstudiante();
+		for (Estudiante estudiante : l) {
+//			panelesAlumnos.toString();
+			Panel_complementario nuevoPanel = new Panel_complementario(estudiante, (Materia) jcbMateria.getSelectedItem(),
+					(Profesor) jcbProfesor.getSelectedItem());
+			panelEstudiantes.add(nuevoPanel);
+			panelesAlumnos.add(nuevoPanel);
 		}
-		
-		
+
 		this.repaint();
 		this.revalidate();
 	}
@@ -183,9 +188,21 @@ public class Ventana_Centroeducativo extends JFrame {
 	/**
 	 * 
 	 */
-	private void guardar() {
-		for (Panel_complementario panel : panelesAlumnos) {
-			panel.guardaNota();
+	private void guardarNotas() {
+		for (Panel_complementario estudiantePanel : panelesAlumnos) {
+			Valoracionmateria v = estudiantePanel.guardar();
+			if (v != null) {
+				System.out.println(v.toString());
+				ValoracionController.update(v);
+			}
+			else {
+				v = new Valoracionmateria();
+				v.setProfesor((Profesor) jcbProfesor.getSelectedItem());
+				v.setEstudiante(estudiantePanel.devolverEstudiante());
+				v.setMateria((Materia) jcbMateria.getSelectedItem());
+				v.setValoracion(estudiantePanel.devolverValoracion());
+				ValoracionController.insert(v);
+			}
 		}
 	}
 }

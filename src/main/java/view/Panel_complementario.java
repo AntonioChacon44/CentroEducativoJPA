@@ -6,27 +6,36 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
+import controller.ValoracionController;
 import model.Estudiante;
 import model.Materia;
 import model.Profesor;
+import model.Valoracionmateria;
 
 import java.awt.Insets;
 import javax.swing.JSpinner;
 
 public class Panel_complementario extends Panel {
 	
-	private Profesor idProfesor;
-	private Materia idMateria;
-	private Estudiante idEstudiante;
+	private Profesor p;
+	private Materia m;
+	private Estudiante e;
+	private JSpinner spinner;
+	
+	@Override
+	public String toString() {
+		return m.getNombre() + " " + e.getNombre() + " " + p.getNombre() + " " + spinner.getValue();
+	}
 	
 	
-	public Panel_complementario(Profesor idProfesor, Materia idMateria, Estudiante idEstudiante) {
+	public Panel_complementario(Estudiante idEstudiante, Materia idMateria, Profesor idProfesor) {
 		
 		super();
-		this.idProfesor = idProfesor;
-		this.idMateria = idMateria;
-		this.idEstudiante = idEstudiante;
+		this.p = idProfesor;
+		this.m = idMateria;
+		this.e = idEstudiante;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 //		gridBagLayout.columnWidths = new int[]{0, 0, 0};
@@ -44,7 +53,8 @@ public class Panel_complementario extends Panel {
 		gbc_lblNewLabel.gridy = 0;
 		add(lblNewLabel, gbc_lblNewLabel);
 		
-		JSpinner spinner = new JSpinner();
+		spinner = new JSpinner();
+		spinner.setModel(new SpinnerNumberModel(valoracionEstudiante(), null, 10, 1));
 		GridBagConstraints gbc_spinner = new GridBagConstraints();
 		gbc_spinner.fill = GridBagConstraints.BOTH;
 		gbc_spinner.gridx = 1;
@@ -52,12 +62,55 @@ public class Panel_complementario extends Panel {
 		add(spinner, gbc_spinner);
 	}
 	
-	private void cargaNota() {
-		
+	/**
+	 * 
+	 * @return
+	 */
+	private int valoracionEstudiante() {
+		Valoracionmateria valoracion = ValoracionController.findBySomeId(m.getId(), p.getId(), e.getId());
+		if (valoracion != null) {
+			return (int) valoracion.getValoracion();
+		} else {
+			return 0;
+		}
 	}
 	
-	public void guardaNota() {
+	/**
+	 * 
+	 * @return
+	 */
+	public Estudiante devolverEstudiante() {
+		return e;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public int devolverValoracion() {
+		return (int) spinner.getValue();
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Valoracionmateria guardar() {
+		Valoracionmateria o1 = ValoracionController.findBySomeId(m.getId(), p.getId(), e.getId());
+		Valoracionmateria o = new Valoracionmateria();
 		
+		if(o1 != null) {
+			o.setId(o1.getId());
+			o.setProfesor(p);
+			o.setEstudiante(e);
+			o.setMateria(m);
+			o.setValoracion((int) spinner.getValue());
+	
+			return o;
+		}
+		else {
+			return null;
+		}
 	}
 
 }

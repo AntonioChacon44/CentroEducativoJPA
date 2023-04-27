@@ -100,7 +100,7 @@ public class Panel_complementario extends Panel {
 		Valoracionmateria o = new Valoracionmateria();
 		
 		if(o1 != null) {
-			o.setId(o1.getId());
+			o.setId(o1.getId()); 
 			o.setProfesor(p);
 			o.setEstudiante(e);
 			o.setMateria(m);

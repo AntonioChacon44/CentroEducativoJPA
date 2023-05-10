@@ -8,8 +8,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.swing.JOptionPane;
 
 import model.Estudiante;
+import model.Valoracionmateria;
 
 public class EstudianteController {
 	
@@ -62,6 +64,19 @@ public class EstudianteController {
         em.close();
 
         return lista;
+	}
+	
+	/**
+	 * 
+	 * @param o
+	 */
+	public static void update(Estudiante o) {
+		EntityManager em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+		em.merge(o);
+		JOptionPane.showMessageDialog(null, "Se ha guardado correctamente");
+		em.getTransaction().commit();
+		em.close();
 	}
 	
 	/**

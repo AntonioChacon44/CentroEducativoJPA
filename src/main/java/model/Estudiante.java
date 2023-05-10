@@ -28,8 +28,6 @@ public class Estudiante implements Serializable {
 
 	private String email;
 
-	private int idTipologiaSexo;
-
 	private String nombre;
 
 	private String telefono;
@@ -87,14 +85,6 @@ public class Estudiante implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public int getIdTipologiaSexo() {
-		return this.idTipologiaSexo;
-	}
-
-	public void setIdTipologiaSexo(int idTipologiaSexo) {
-		this.idTipologiaSexo = idTipologiaSexo;
 	}
 
 	public String getNombre() {

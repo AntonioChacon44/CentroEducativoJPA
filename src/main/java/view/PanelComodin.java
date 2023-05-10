@@ -14,6 +14,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import controller.EstudianteController;
+import model.Estudiante;
+
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 
@@ -26,13 +29,15 @@ public class PanelComodin extends JPanel {
 	private static JTextField jtfdirec;
 	private static JTextField jtfemail;
 	private static JTextField jtftelef;
+	private static Estudiante es = new Estudiante();
+	private JButton btnGuardar;
 
 	/**
 	 * Create the panel.
 	 */
 	public PanelComodin() {
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 1.0 };
 //		gridBagLayout.columnWeights = new double[]{0.0, 1.0};
 //		gridBagLayout.columnWidths = new int[]{0};
@@ -154,19 +159,31 @@ public class PanelComodin extends JPanel {
 		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
 		gbc_lblNewLabel_7.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblNewLabel_7.anchor = GridBagConstraints.NORTH;
-		gbc_lblNewLabel_7.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_7.gridx = 0;
 		gbc_lblNewLabel_7.gridy = 6;
 		add(lblNewLabel_7, gbc_lblNewLabel_7);
 
 		jtftelef = new JTextField();
 		GridBagConstraints gbc_jtftelef = new GridBagConstraints();
+		gbc_jtftelef.insets = new Insets(0, 0, 5, 0);
 		gbc_jtftelef.weightx = 1.0;
 		gbc_jtftelef.fill = GridBagConstraints.HORIZONTAL;
 		gbc_jtftelef.gridx = 1;
 		gbc_jtftelef.gridy = 6;
 		add(jtftelef, gbc_jtftelef);
 		jtftelef.setColumns(10);
+		
+		btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				guardar();
+			}
+		});
+		GridBagConstraints gbc_btnGuardar = new GridBagConstraints();
+		gbc_btnGuardar.gridx = 1;
+		gbc_btnGuardar.gridy = 7;
+		add(btnGuardar, gbc_btnGuardar);
 
 	
 	}
@@ -185,9 +202,9 @@ public class PanelComodin extends JPanel {
 
 	/** @return */
 
-	public static String getId() {
+	public static int getId() {
 
-		return jtfId.getText();
+		return Integer.parseInt(jtfId.getText());
 
 	}
 
@@ -309,7 +326,23 @@ public class PanelComodin extends JPanel {
 		return jtftelef.getText();
 
 	}
-
+	
+	/**
+	 * 
+	 */
+	 public static void guardar() {
+	        es.setId(getId());
+	        es.setNombre(getNombre());
+	        es.setNombre(getNombre());
+	        es.setApellido1(getApellido1());
+	        es.setApellido2(getApellido2());
+	        es.setDni(getDNI());
+	        es.setDireccion(getDireccion());
+	        es.setEmail(getEmail());
+	        es.setTelefono(getTelefono());
+	        
+	        EstudianteController.update(es);
+	    }
 	
 
 }
